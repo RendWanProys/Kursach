@@ -47,7 +47,7 @@ namespace KursProjectISP31.ViewModel
         private RelayCommand addCommand;
         public RelayCommand AddCommand => addCommand ??= new RelayCommand((o) =>
         {
-            var window = new FlightDataWindow(new FlightData()); // Изменено здесь
+            var window = new FlightDataWindow(new FlightData()); 
             if (window.ShowDialog() == true)
             {
                 flightDataService.Add(window.CurrentFlightData);
