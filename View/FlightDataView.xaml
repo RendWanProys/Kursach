@@ -1,0 +1,102 @@
+﻿<UserControl x:Class="KursProjectISP31.View.FlightDataView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:KursProjectISP31.View"
+             xmlns:vm="clr-namespace:KursProjectISP31.ViewModel"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="800"
+             Style="{StaticResource Page_Style}">
+    <UserControl.DataContext>
+        <vm:FlightDataViewModel/>
+    </UserControl.DataContext>
+    <Grid>
+        <Border CornerRadius="0,20,20,0" Margin="0,5,5,0">
+            <Grid Margin="15">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <!-- Сделано Auto, чтобы текст помещался -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- Сделано Auto, чтобы кнопки помещались -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- Сделано Auto, чтобы элементы управления помещались -->
+                    <RowDefinition Height="*"/>
+                    <!-- Остальное пространство для DataGrid -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- Нижний отступ -->
+                </Grid.RowDefinitions>
+                <TextBlock Style="{StaticResource Text_Style}" Grid.Row="0"
+                           Text="Данные рейсов"/>
+                <StackPanel Orientation="Horizontal" Grid.Row="1"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center">
+                    <Button Margin="5 0">
+                        <Image Source="/Assets/table.png"/>
+                    </Button>
+                    <Button Margin="5 0">
+                        <Image Source="/Assets/block.png"/>
+                    </Button>
+                </StackPanel>
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="4*"/>
+                        <ColumnDefinition Width="4*"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Style="{StaticResource Text_Style}">
+                            Показать
+                        </TextBlock>
+                        <ComboBox Width="100">
+                            <sys:String>10</sys:String>
+                            <sys:String>50</sys:String>
+                            <sys:String>100</sys:String>
+                        </ComboBox>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Grid.Column="1">
+                        <Image Source="/Assets/search.png"
+                               Style="{StaticResource Image_Style}"/>
+                        <TextBox Width="200" Height="25" Text="{Binding SearchText,UpdateSourceTrigger=PropertyChanged}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="TextChanged">
+                                    <i:InvokeCommandAction
+                                        Command="{Binding SearchCommand}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </TextBox>
+                    </StackPanel>
+                    <Button Grid.Column="2" HorizontalAlignment="Right"
+                            Background="Transparent" Command="{Binding AddCommand}"
+                            BorderBrush="Black">
+                        <Image Source="/Assets/add.png"/>
+                    </Button>
+                </Grid>
+                <DataGrid ItemsSource="{Binding FlightData}"
+                      AutoGenerateColumns="False" Grid.Row="3" IsReadOnly="True"
+                          SelectedItem="{Binding SelectedFlight}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Flight Number" Binding="{Binding FlightNumber}" Width="Auto"/>
+                        <DataGridTextColumn Header="Date" Binding="{Binding Date, StringFormat='dd.MM.yyyy'}" Width="Auto"/>
+                        <DataGridTextColumn Header="Passengers" Binding="{Binding Passengers}" Width="Auto"/>
+                        <DataGridTextColumn Header="Load (%)" Binding="{Binding LoadPercentage}" Width="Auto"/>
+                        <DataGridTextColumn Header="Profit" Binding="{Binding Profit, StringFormat='N2'}" Width="Auto"/>
+                    </DataGrid.Columns>
+                    <DataGrid.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Edit" Command="{Binding EditCommand}" CommandParameter="{Binding SelectedFlight}" />
+                            <MenuItem Header="Delete" Command="{Binding DeleteCommand}" CommandParameter="{Binding SelectedFlight}" />
+                        </ContextMenu>
+                    </DataGrid.ContextMenu>
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseDoubleClick">
+                            <i:InvokeCommandAction Command="{Binding EditCommand}" CommandParameter="{Binding SelectedFlight}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </DataGrid>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>
